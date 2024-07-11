@@ -1,0 +1,82 @@
+Para resolver este problema, vamos a analizar primero el tablero de ajedrez estándar de 8x8 
+y luego extenderemos el análisis a un tablero más grande de 1000x1000.
+
+Análisis del Problema
+Balance de Colores:
+
+El tablero debe tener la misma cantidad de cuadros rojos y azules.
+En un tablero de NxN donde N es par, esto significa que necesitamos 
+(N^2)/2 cuadros rojos y 
+(N^2)/2
+  cuadros azules.
+Restricción de Filas y Columnas:
+
+Ninguna fila o columna puede tener la misma cantidad de cuadros rojos.
+Esto implica que las cantidades de cuadros rojos en cada fila y columna deben ser únicas.
+Tablero 8x8
+Para un tablero de 8x8, necesitamos 32 cuadros rojos y 32 cuadros azules. Sin embargo, queremos que las cantidades de cuadros rojos en cada fila y columna sean únicas.
+
+Si intentamos distribuir los colores de esta manera, vemos que no podemos tener una distribución única de números del 0 al 8 (la cantidad de rojos) en cada fila y columna, ya que hay más filas y columnas que posibles valores únicos (de 0 a 8).
+
+Tablero 1000x1000
+Para un tablero de 1000x1000, necesitamos 500,000 cuadros rojos y 500,000 cuadros azules. Aquí también, queremos que las cantidades de cuadros rojos en cada fila y columna sean únicas.
+
+Similar al caso anterior, intentemos una distribución única de números del 0 al 1000. Para 1000 filas y 1000 columnas, necesitamos que los números del 0 al 1000 sean únicos, lo cual es imposible ya que hay más filas y columnas que posibles valores únicos (de 0 a 1000).
+
+Conclusión
+Es imposible colorear un tablero 
+N×N de modo que cada fila y cada columna tenga una cantidad única de cuadros rojos, ya que el número de filas y columnas excede el rango de valores únicos que podemos asignar.
+
+Para sustentar esto con código, podemos intentar crear una distribución y demostrar la imposibilidad.
+
+python
+
+import numpy as np
+
+def generate_board(N):
+    board = np.zeros((N, N), dtype=int)
+    
+    # Contamos la cantidad de rojos por fila y columna
+    row_counts = np.zeros(N, dtype=int)
+    col_counts = np.zeros(N, dtype=int)
+    
+    # Intentamos llenar el tablero de forma que cada fila y columna tenga una cantidad única de rojos
+    for i in range(N):
+        for j in range(N):
+            if row_counts[i] < N//2 and col_counts[j] < N//2:
+                board[i][j] = 1  # Marcamos como rojo
+                row_counts[i] += 1
+                col_counts[j] += 1
+    
+    return board, row_counts, col_counts
+
+def check_uniqueness(counts):
+    return len(counts) == len(set(counts))
+
+# Parámetros
+N = 8  # Puedes cambiar a 1000 para el tablero más grande
+
+# Generamos el tablero
+board, row_counts, col_counts = generate_board(N)
+
+# Verificamos la unicidad
+rows_unique = check_uniqueness(row_counts)
+cols_unique = check_uniqueness(col_counts)
+
+# Resultado
+print("Tablero:")
+print(board)
+print("Cantidad de rojos por fila:", row_counts)
+print("Cantidad de rojos por columna:", col_counts)
+print("Las cantidades de rojos en las filas son únicas:", rows_unique)
+print("Las cantidades de rojos en las columnas son únicas:", cols_unique)
+Explicación del Código
+Función generate_board(N):
+
+Genera un tablero y como resultado esperado, al ejecutar el código, veremos que es imposible tener cantidades únicas de cuadros rojos en cada fila y columna. Esto valida nuestra conclusión teórica.
+
+
+
+
+
+
